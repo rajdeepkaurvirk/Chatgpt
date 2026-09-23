@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Days until we are wed</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4ecdf;--sheen:#fbf6ec;--ink:#4a1f2c;--soft:#7a5a5f;--gold:#a5813f;--rose:#c79a9a;--line:#d9c6a5;--card:#fbf6ec;--lace:#fffdf8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2a1219;--sheen:#3a1a24;--ink:#f3e6d2;--soft:#cdb4a8;--gold:#d4ae66;--rose:#c79a9a;--line:#6a4a3a;--card:#3a1a24;--lace:#f3e6d2}}
+:root[data-theme="dark"]{--bg:#2a1219;--sheen:#3a1a24;--ink:#f3e6d2;--soft:#cdb4a8;--gold:#d4ae66;--rose:#c79a9a;--line:#6a4a3a;--card:#3a1a24;--lace:#f3e6d2}
+*{box-sizing:border-box}
+html{background:var(--bg)}html,body{min-height:100%;margin:0}
+body{color:var(--ink);font:400 18px/1.55 "Cormorant Garamond",Georgia,serif;background:linear-gradient(115deg,var(--bg) 0%,var(--sheen) 35%,var(--bg) 55%,var(--sheen) 80%,var(--bg) 100%);background-attachment:fixed}
+.hem{position:fixed;left:0;right:0;height:34px;z-index:2;pointer-events:none}
+.hem.t{top:0}.hem.b{bottom:0;transform:scaleY(-1)}
+.hem::before{content:"";position:absolute;top:0;left:0;right:0;height:8px;background:linear-gradient(var(--ink),#7a3446);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.hem::after{content:"";position:absolute;top:8px;left:0;right:0;height:20px;filter:drop-shadow(0 1px 1.5px rgba(74,31,44,.35));
+background:radial-gradient(circle at 11px 7px,var(--bg) 2.2px,transparent 2.7px) 0 0/22px 20px repeat-x,radial-gradient(circle at 11px 0,var(--lace) 10.5px,transparent 11px) 0 0/22px 20px repeat-x}
+main{min-height:100%;max-width:620px;margin:0 auto;padding:60px 22px;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.tabs{display:flex;gap:10px;justify-content:center;margin-bottom:18px}
+.tabs button{font:italic 500 1.05rem "Cormorant Garamond",Georgia,serif;cursor:pointer;border:1px solid var(--gold);background:transparent;color:var(--soft);border-radius:999px;padding:10px 20px;min-height:44px}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--sheen);border-color:var(--ink)}
+.tabs button:focus-visible,#days:focus-visible{outline:3px solid var(--rose);outline-offset:3px}
+.orn{color:var(--gold);letter-spacing:.6em;margin:0 0 6px;font-size:1.1rem}
+.heart{position:relative;width:min(100%,540px);margin:0 auto}
+.heart svg{display:block;width:100%;height:auto;color:var(--lace);filter:drop-shadow(0 2px 3px rgba(74,31,44,.3)) drop-shadow(0 0 1px var(--gold))}
+#mesh path{stroke:var(--lace);opacity:.28}
+.core{fill:var(--core)}
+:root{--core:#5a2333;--onCore:#fbf6ec;--goldLt:#e3c58a}
+.eye{stroke:var(--bg)}
+.inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:10%}
+#label{font:400 clamp(1.4rem,6vw,2.1rem)/1.1 "Pinyon Script",cursive;color:var(--ink);margin:0 0 10px}
+#days{display:block;font:italic 500 clamp(4.8rem,26vw,8.6rem)/.95 "Cormorant Garamond",Georgia,serif;font-variant-numeric:lining-nums tabular-nums;cursor:pointer;background:none;border:none;color:var(--onCore);text-shadow:0 2px 0 rgba(0,0,0,.35),0 4px 14px rgba(0,0,0,.35)}
+#unit{font:italic 1.6rem "Cormorant Garamond",Georgia,serif;color:var(--goldLt);margin:0}
+#clock{font:500 1.3rem "Cormorant Garamond",serif;font-variant-numeric:lining-nums tabular-nums;color:var(--soft);letter-spacing:.06em;margin:20px 0 18px}
+.bar{width:100%;border:1px solid var(--gold);height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:0 auto 8px;max-width:360px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--rose));transition:width 1s}
+#pct{color:var(--soft);font-style:italic;font-size:1rem;margin:0 0 28px}
+.note{background:var(--card);border:1px solid var(--gold);outline:1px solid var(--line);outline-offset:5px;border-radius:6px;padding:20px 22px;text-align:center;margin:0 6px}
+.note small{font:400 1.5rem "Pinyon Script",cursive;color:var(--gold)}
+#note{font:italic 1.3rem/1.45 "Cormorant Garamond",Georgia,serif;margin:4px 0 0}
+.pop{position:fixed;pointer-events:none;font-size:1.8rem;z-index:5;animation:pop 1.4s ease-out forwards}
+@keyframes pop{to{transform:translate(var(--x),-260px) rotate(var(--r));opacity:0}}
+@media (prefers-reduced-motion:reduce){.pop{display:none}.bar i{transition:none}}
+</style></head><body>
+<div class="hem t" aria-hidden="true"></div><div class="hem b" aria-hidden="true"></div>
+<main>
+<div class="tabs" role="group" aria-label="Choose a countdown">
+<button type="button" data-k="wedding" aria-pressed="true">Our Wedding</button>
+<button type="button" data-k="concert" aria-pressed="false">Our Concert</button></div>
+<p class="orn" aria-hidden="true">❦ ❦ ❦</p>
+<p id="label">Days until we are wed</p>
+<div class="heart"><svg viewBox="0 0 400 352" role="img" aria-label="Lace heart">
+<defs>
+<pattern id="mesh" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0H7M0 0V7" stroke-width=".9"/></pattern>
+<path id="h" d="M200 332 C 62 242, 18 158, 18 104 C 18 52, 58 20, 104 20 C 146 20, 182 46, 200 82 C 218 46, 254 20, 296 20 C 342 20, 382 52, 382 104 C 382 158, 338 242, 200 332 Z"/>
+</defs>
+<use href="#h" fill="none" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-dasharray="0 21"/>
+<use href="#h" fill="none" class="eye" stroke="#000" stroke-width="7" stroke-linecap="round" stroke-dasharray="0 21" stroke-dashoffset="10.5" transform="translate(200 176) scale(1) translate(-200 -176)"/>
+<use href="#h" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-dasharray="1 8" transform="translate(200 176) scale(0.9) translate(-200 -176)"/>
+<use href="#h" fill="none" stroke="currentColor" stroke-width="3" transform="translate(200 176) scale(0.84) translate(-200 -176)"/>
+<use href="#h" class="core" fill="#5a2333" transform="translate(200 176) scale(0.82) translate(-200 -176)"/>
+<use href="#h" fill="url(#mesh)" transform="translate(200 176) scale(0.82) translate(-200 -176)"/>
+<use href="#h" fill="none" stroke="currentColor" stroke-width="1.5" stroke-opacity=".8" transform="translate(200 176) scale(0.79) translate(-200 -176)"/>
+</svg>
+<div class="inner">
+<button id="days" type="button" aria-label="Days remaining. Tap for a surprise.">000</button>
+<p id="unit">days</p></div></div>
+<p id="clock">00h 00m 00s</p>
+<div class="bar" aria-hidden="true"><i id="fill"></i></div><p id="pct"></p>
+<div class="note"><small id="noteHead">A note for today</small><p id="note"></p></div>
+</main>
+<script>
+const T={
+  wedding:{at:Date.UTC(2027,4,2,16,0,0),label:"Days until we are wed",done:"This very day, we are wed ♡",start:Date.UTC(2026,8,23,7,0,0)},
+  concert:{at:Date.UTC(2026,9,7,4,0,0),label:"Days until our evening at the concert",done:"Tonight, we sing far too loudly 🎤",start:Date.UTC(2026,8,23,7,0,0)}
+};
+const notes=[
+"Today's plan: miss you a normal amount, then a bit extra at lunch.",
+"Somewhere in my future there is a backyard, a cucumber, and you rolling your eyes at me.",
+"Chole Bhature for two is coming. Stay hungry.",
+"I still smile at our phrase: we're both so lucky.",
+"One day closer to coffee in bed. I'll bring it. You just have to be there.",
+"Allah Wawa. That's the whole note.",
+"Every FaceTime is a tiny visit. Tonight's is my favorite part of the day.",
+"English Bay, 8 AM, you next to me. I am saving that morning.",
+"You make ordinary stuff feel like a good plan. Grocery shopping with you is going to be elite.",
+"I'm not counting the days. I'm collecting them, and they're all going to you.",
+"Drink some water, be kind to yourself, and know I'm proud of you today.",
+"No more goodbyes soon. Just 'see you in the kitchen'.",
+"Extreme Comfort Level Activities are on the schedule. Get ready.",
+"Distance is temporary. This countdown is proof."
+];
+const $=id=>document.getElementById(id);
+let key=(location.hash==="#concert")?"concert":"wedding";
+const p2=n=>String(n).padStart(2,"0");
+function tick(){
+  const t=T[key],d=t.at-Date.now();
+  if(d<=0){$("days").textContent="0";$("unit").textContent=t.done;$("clock").textContent="";$("fill").style.width="100%";$("pct").textContent="";return;}
+  const s=Math.floor(d/1000),days=Math.floor(s/86400);
+  $("days").textContent=days;
+  $("unit").textContent=days===1?"day":"days";
+  $("clock").textContent=days+"d "+p2(Math.floor(s%86400/3600))+"h "+p2(Math.floor(s%3600/60))+"m "+p2(s%60)+"s";
+  const pct=Math.max(0,Math.min(100,(Date.now()-t.start)/(t.at-t.start)*100));
+  $("fill").style.width=pct+"%";
+  $("pct").textContent=pct.toFixed(1)+"% of the wait is done";
+  $("note").textContent=notes[days%notes.length];
+}
+function pick(k){
+  key=k;$("label").textContent=T[k].label;
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===k));
+  $("noteHead").textContent=k==="wedding"?"A note for today":"A note for the concert";
+  tick();
+}
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>pick(b.dataset.k)));
+$("days").addEventListener("click",e=>{
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  const r=e.currentTarget.getBoundingClientRect(),em=["🤍","🕊️","🌹","✨","🥒","☕"];
+  for(let i=0;i<12;i++){const s=document.createElement("span");s.className="pop";s.textContent=em[i%em.length];
+    s.style.left=(r.left+r.width/2)+"px";s.style.top=(r.top+r.height/2)+"px";
+    s.style.setProperty("--x",(Math.random()*260-130)+"px");s.style.setProperty("--r",(Math.random()*80-40)+"deg");
+    document.body.appendChild(s);setTimeout(()=>s.remove(),1500);}
+});
+pick(key);setInterval(tick,1000);
+</script>
+</body></html>
