@@ -1,906 +1,679 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f7f4ee">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<title>Countdown</title>
+  <title>Countdown</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=Italiana&family=Oooh+Baby&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#f7f4ed">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-<style>
-* {
-    box-sizing: border-box;
-}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-html {
-    scroll-behavior: smooth;
-}
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=Italiana&family=Oooh+Baby&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 
-body {
-    margin: 0;
-    min-height: 100vh;
-    background:
-        radial-gradient(circle at 15% 15%, rgba(184, 154, 116, 0.08), transparent 28%),
-        radial-gradient(circle at 85% 85%, rgba(30, 52, 77, 0.08), transparent 30%),
-        #f7f4ee;
-    color: #18283b;
-    font-family: "Playfair Display", serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow-x: hidden;
-}
-
-/* subtle paper texture */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.16;
-    background-image:
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 3px,
-            rgba(24, 40, 59, 0.025) 4px
-        );
-}
-
-.page {
-    width: min(920px, 100%);
-    min-height: 100vh;
-    padding: 48px 24px 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    position: relative;
-}
-
-/* little decorative corners */
-.corner {
-    position: absolute;
-    width: 70px;
-    height: 70px;
-    opacity: 0.35;
-}
-
-.corner::before,
-.corner::after {
-    content: "";
-    position: absolute;
-    background: #b99b76;
-}
-
-.corner::before {
-    width: 1px;
-    height: 70px;
-}
-
-.corner::after {
-    width: 70px;
-    height: 1px;
-}
-
-.corner.tl {
-    top: 25px;
-    left: 25px;
-}
-
-.corner.tr {
-    top: 25px;
-    right: 25px;
-    transform: rotate(90deg);
-}
-
-.corner.bl {
-    bottom: 25px;
-    left: 25px;
-    transform: rotate(-90deg);
-}
-
-.corner.br {
-    bottom: 25px;
-    right: 25px;
-    transform: rotate(180deg);
-}
-
-.eyebrow {
-    font-family: "DM Mono", monospace;
-    font-size: 10px;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    margin-bottom: 22px;
-    opacity: 0.62;
-}
-
-.names {
-    font-family: "Italiana", serif;
-    font-size: clamp(48px, 10vw, 92px);
-    line-height: 0.95;
-    font-weight: 400;
-    letter-spacing: -0.02em;
-    margin: 0;
-}
-
-.ampersand {
-    font-family: "Oooh Baby", cursive;
-    font-size: 0.48em;
-    color: #a88b68;
-    display: inline-block;
-    margin: 0 7px;
-    transform: translateY(-8px);
-}
-
-.date {
-    margin-top: 24px;
-    font-family: "DM Mono", monospace;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    opacity: 0.65;
-}
-
-.divider {
-    width: 70px;
-    height: 1px;
-    background: #b99b76;
-    margin: 34px auto;
-    opacity: 0.65;
-}
-
-/* COUNTDOWN */
-.countdown {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    width: min(700px, 100%);
-    margin: 0 auto;
-}
-
-.unit {
-    padding: 24px 8px 20px;
-    border-top: 1px solid rgba(24, 40, 59, 0.2);
-    border-bottom: 1px solid rgba(24, 40, 59, 0.2);
-}
-
-.number {
-    display: block;
-    font-family: "Italiana", serif;
-    font-size: clamp(38px, 7vw, 68px);
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-}
-
-.label {
-    display: block;
-    margin-top: 10px;
-    font-family: "DM Mono", monospace;
-    font-size: 8px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    opacity: 0.58;
-}
-
-/* progress */
-.progress-wrap {
-    width: min(520px, 80%);
-    margin: 36px auto 0;
-}
-
-.progress-line {
-    width: 100%;
-    height: 1px;
-    background: rgba(24, 40, 59, 0.14);
-    position: relative;
-}
-
-.progress-fill {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 1px;
-    width: 0%;
-    background: #a88b68;
-    transition: width 0.8s ease;
-}
-
-.progress-text {
-    margin-top: 10px;
-    font-family: "DM Mono", monospace;
-    font-size: 8px;
-    letter-spacing: 0.18em;
-    opacity: 0.45;
-}
-
-/* DAILY NOTE */
-.note-area {
-    margin-top: 44px;
-    min-height: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.note-label {
-    font-family: "DM Mono", monospace;
-    font-size: 8px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    opacity: 0.42;
-    margin-bottom: 14px;
-}
-
-.daily-note {
-    max-width: 620px;
-    margin: 0 auto;
-    font-family: "Oooh Baby", cursive;
-    font-size: clamp(23px, 4vw, 34px);
-    line-height: 1.25;
-    color: #263a50;
-    transition: opacity 0.35s ease;
-}
-
-.footer {
-    margin-top: 42px;
-    font-family: "DM Mono", monospace;
-    font-size: 7px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    opacity: 0.35;
-}
-
-/* HEART */
-.heart {
-    margin: 28px auto 0;
-    width: 17px;
-    height: 17px;
-    position: relative;
-    transform: rotate(-45deg);
-    cursor: pointer;
-    opacity: 0.55;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.heart:hover {
-    transform: rotate(-45deg) scale(1.15);
-    opacity: 0.9;
-}
-
-.heart::before,
-.heart::after {
-    content: "";
-    position: absolute;
-    width: 17px;
-    height: 17px;
-    background: #a88b68;
-    border-radius: 50%;
-}
-
-.heart {
-    background: #a88b68;
-}
-
-.heart::before {
-    top: -8px;
-    left: 0;
-}
-
-.heart::after {
-    left: 8px;
-    top: 0;
-}
-
-/* little surprise */
-.sparkle {
-    position: fixed;
-    pointer-events: none;
-    font-family: "Oooh Baby", cursive;
-    font-size: 20px;
-    color: #a88b68;
-    animation: floatAway 1.4s ease-out forwards;
-}
-
-@keyframes floatAway {
-    from {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+  <style>
+    :root {
+      --ivory: #f7f4ed;
+      --paper: #fbfaf6;
+      --navy: #18283b;
+      --navy-soft: #304258;
+      --gold: #b39a68;
+      --blush: #d9b9b5;
+      --sage: #b9c4b5;
+      --line: rgba(24, 40, 59, 0.14);
     }
-    to {
-        opacity: 0;
-        transform: translateY(-90px) scale(1.5);
-    }
-}
 
-@media (max-width: 600px) {
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--ivory);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(217,185,181,.17), transparent 24%),
+        radial-gradient(circle at 88% 78%, rgba(185,196,181,.16), transparent 24%),
+        var(--ivory);
+      color: var(--navy);
+      font-family: "Playfair Display", serif;
+      overflow-x: hidden;
+    }
 
     .page {
-        padding: 38px 18px 30px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding:
+        max(28px, env(safe-area-inset-top))
+        22px
+        max(26px, env(safe-area-inset-bottom));
     }
 
+    /* Decorative corner details */
+
     .corner {
-        width: 42px;
-        height: 42px;
+      position: fixed;
+      width: 85px;
+      height: 85px;
+      pointer-events: none;
+      opacity: .65;
+    }
+
+    .corner::before,
+    .corner::after {
+      content: "";
+      position: absolute;
+      border-color: var(--gold);
+      border-style: solid;
     }
 
     .corner::before {
-        height: 42px;
+      width: 55px;
+      height: 55px;
     }
 
     .corner::after {
-        width: 42px;
+      width: 7px;
+      height: 7px;
+      border-width: 1px;
+      border-radius: 50%;
     }
 
-    .corner.tl {
-        top: 18px;
-        left: 18px;
+    .top-left {
+      top: 13px;
+      left: 13px;
     }
 
-    .corner.tr {
-        top: 18px;
-        right: 18px;
+    .top-left::before {
+      top: 0;
+      left: 0;
+      border-width: 1px 0 0 1px;
     }
 
-    .corner.bl {
-        bottom: 18px;
-        left: 18px;
+    .top-left::after {
+      top: 5px;
+      left: 63px;
     }
 
-    .corner.br {
-        bottom: 18px;
-        right: 18px;
+    .bottom-right {
+      bottom: 13px;
+      right: 13px;
+      transform: rotate(180deg);
+    }
+
+    .bottom-right::before {
+      top: 0;
+      left: 0;
+      border-width: 1px 0 0 1px;
+    }
+
+    .bottom-right::after {
+      top: 5px;
+      left: 63px;
+    }
+
+    /* Header */
+
+    header {
+      text-align: center;
+      padding-top: 28px;
+      animation: fadeUp 1s ease both;
+    }
+
+    .eyebrow {
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--navy-soft);
+      opacity: .7;
+      margin-bottom: 22px;
+    }
+
+    .names {
+      font-family: "Italiana", serif;
+      font-size: clamp(52px, 15vw, 92px);
+      line-height: .88;
+      font-weight: 400;
+      letter-spacing: -.035em;
+    }
+
+    .amp {
+      display: block;
+      font-family: "Oooh Baby", cursive;
+      font-size: .46em;
+      color: var(--gold);
+      line-height: .8;
+      margin: 12px 0 9px;
+      transform: rotate(-4deg);
+    }
+
+    .date {
+      margin-top: 27px;
+      font-family: "DM Mono", monospace;
+      font-size: 11px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--navy-soft);
+    }
+
+    /* Main */
+
+    main {
+      width: min(850px, 100%);
+      margin: auto;
+      padding: 55px 0 45px;
     }
 
     .countdown {
-        gap: 5px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
     }
 
     .unit {
-        padding: 18px 3px;
+      position: relative;
+      text-align: center;
+      padding: 29px 7px 27px;
+    }
+
+    .unit:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 29%;
+      height: 42%;
+      width: 1px;
+      background: var(--line);
     }
 
     .number {
-        font-size: clamp(30px, 10vw, 48px);
+      font-family: "DM Mono", monospace;
+      font-size: clamp(30px, 7vw, 58px);
+      line-height: 1;
+      font-weight: 300;
+      letter-spacing: -.06em;
     }
 
     .label {
-        font-size: 7px;
-        letter-spacing: 0.12em;
+      margin-top: 12px;
+      font-family: "DM Mono", monospace;
+      font-size: 8px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: .58;
     }
 
-    .divider {
-        margin: 28px auto;
+    /* Tiny visual ornament */
+
+    .ornament {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin: 42px 0 0;
     }
 
-    .note-area {
-        margin-top: 34px;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: auto;
+    .ornament-line {
+      width: 38px;
+      height: 1px;
+      background: var(--gold);
+      opacity: .65;
     }
 
-    .progress-fill,
-    .daily-note,
+    .ornament-dot {
+      width: 5px;
+      height: 5px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+    }
+
+    /* Daily note */
+
+    .daily {
+      text-align: center;
+      margin: 43px auto 0;
+      max-width: 560px;
+      padding: 0 15px;
+      animation: fadeUp 1s .25s ease both;
+    }
+
+    .daily-label {
+      font-family: "DM Mono", monospace;
+      font-size: 8px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      opacity: .5;
+      margin-bottom: 14px;
+    }
+
+    .note {
+      font-family: "Oooh Baby", cursive;
+      font-size: clamp(25px, 6vw, 36px);
+      line-height: 1.2;
+      color: var(--navy-soft);
+      transition: opacity .4s ease;
+    }
+
+    /* Footer */
+
+    footer {
+      text-align: center;
+      margin-top: auto;
+      padding-top: 30px;
+      animation: fadeUp 1s .45s ease both;
+    }
+
+    .footer-text {
+      font-family: "DM Mono", monospace;
+      font-size: 8px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: .43;
+    }
+
     .heart {
-        transition: none;
+      margin: 13px auto 0;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      position: relative;
+      transition: transform .25s ease;
+      user-select: none;
     }
-}
-</style>
+
+    .heart:hover {
+      transform: scale(1.12);
+    }
+
+    .heart::before {
+      content: "♡";
+      font-family: serif;
+      font-size: 27px;
+      color: var(--gold);
+      position: absolute;
+      left: 0;
+      top: -4px;
+    }
+
+    .heart-message {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translate(-50%, 15px);
+      background: var(--navy);
+      color: var(--ivory);
+      padding: 11px 17px;
+      border-radius: 3px;
+      font-family: "DM Mono", monospace;
+      font-size: 9px;
+      letter-spacing: .08em;
+      opacity: 0;
+      pointer-events: none;
+      transition: .35s ease;
+      white-space: nowrap;
+    }
+
+    .heart-message.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    /* Mobile */
+
+    @media (max-width: 520px) {
+      .page {
+        padding-left: 17px;
+        padding-right: 17px;
+      }
+
+      header {
+        padding-top: 24px;
+      }
+
+      .names {
+        font-size: clamp(50px, 17vw, 76px);
+      }
+
+      main {
+        padding-top: 48px;
+      }
+
+      .unit {
+        padding-top: 24px;
+        padding-bottom: 23px;
+      }
+
+      .number {
+        font-size: clamp(25px, 8.5vw, 40px);
+      }
+
+      .label {
+        font-size: 7px;
+        letter-spacing: .12em;
+      }
+
+      .corner {
+        opacity: .45;
+        transform: scale(.72);
+        transform-origin: top left;
+      }
+
+      .bottom-right {
+        transform: rotate(180deg) scale(.72);
+        transform-origin: bottom right;
+      }
+    }
+
+    @media (max-width: 350px) {
+      .names {
+        font-size: 48px;
+      }
+
+      .number {
+        font-size: 23px;
+      }
+
+      .label {
+        font-size: 6px;
+      }
+    }
+
+    /* Animation */
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<main class="page">
+  <div class="page">
 
-    <div class="corner tl"></div>
-    <div class="corner tr"></div>
-    <div class="corner bl"></div>
-    <div class="corner br"></div>
+    <div class="corner top-left"></div>
+    <div class="corner bottom-right"></div>
 
-    <div class="eyebrow">The countdown</div>
+    <header>
+      <div class="eyebrow">A little countdown to forever</div>
 
-    <h1 class="names">
+      <div class="names">
         Rajdeep
-        <span class="ampersand">&amp;</span>
+        <span class="amp">&amp;</span>
         Inderjeet
-    </h1>
+      </div>
 
-    <div class="date">
+      <div class="date">
         May 02 · 2027
+      </div>
+    </header>
+
+    <main>
+
+      <section class="countdown" aria-label="Wedding countdown">
+
+        <div class="unit">
+          <div class="number" id="days">000</div>
+          <div class="label">Days</div>
+        </div>
+
+        <div class="unit">
+          <div class="number" id="hours">00</div>
+          <div class="label">Hours</div>
+        </div>
+
+        <div class="unit">
+          <div class="number" id="minutes">00</div>
+          <div class="label">Minutes</div>
+        </div>
+
+        <div class="unit">
+          <div class="number" id="seconds">00</div>
+          <div class="label">Seconds</div>
+        </div>
+
+      </section>
+
+      <div class="ornament">
+        <span class="ornament-line"></span>
+        <span class="ornament-dot"></span>
+        <span class="ornament-line"></span>
+      </div>
+
+      <section class="daily">
+        <div class="daily-label">Today's little thought</div>
+        <div class="note" id="dailyNote"></div>
+      </section>
+
+    </main>
+
+    <footer>
+      <div class="footer-text">Two hearts · one date · a lifetime ahead</div>
+      <div class="heart" id="heart" aria-label="Click for a surprise"></div>
+    </footer>
+
+    <div class="heart-message" id="heartMessage">
+      See you at the mandap. ♡
     </div>
 
-    <div class="divider"></div>
+  </div>
 
-    <section class="countdown" aria-label="Wedding countdown">
-
-        <div class="unit">
-            <span class="number" id="days">000</span>
-            <span class="label">Days</span>
-        </div>
-
-        <div class="unit">
-            <span class="number" id="hours">00</span>
-            <span class="label">Hours</span>
-        </div>
-
-        <div class="unit">
-            <span class="number" id="minutes">00</span>
-            <span class="label">Minutes</span>
-        </div>
-
-        <div class="unit">
-            <span class="number" id="seconds">00</span>
-            <span class="label">Seconds</span>
-        </div>
-
-    </section>
-
-    <div class="progress-wrap">
-        <div class="progress-line">
-            <div class="progress-fill" id="progress"></div>
-        </div>
-
-        <div class="progress-text" id="progressText">
-            counting down to forever
-        </div>
-    </div>
-
-    <section class="note-area">
-
-        <div class="note-label">A little note for today</div>
-
-        <div class="daily-note" id="dailyNote">
-            Every day is one day closer to you.
-        </div>
-
-        <div class="heart" id="heart" aria-label="little surprise"></div>
-
-    </section>
-
-    <div class="footer">
-        Countdown · 02.05.2027
-    </div>
-
-</main>
-
-<script>
-
-/* =====================================================
-   WEDDING COUNTDOWN
-   May 02, 2027
-   ===================================================== */
-
-/*
-   IMPORTANT:
-   The wedding date is set to May 2, 2027 at 12:00 AM
-   in the user's local time.
-
-   This avoids the UTC/Safari/iPhone issue from the
-   previous version.
-*/
-
-const weddingDate = new Date(2027, 4, 2, 0, 0, 0);
-
-
-/* =====================================================
-   DAILY NOTES
-   One note for every day of the countdown.
-
-   The system automatically chooses the note based on
-   the number of days remaining.
-   ===================================================== */
-
-const notes = [
-
-    "Every day is one day closer to you.",
-
-    "Somewhere between now and forever, there is us.",
-
-    "A little closer to the day we get to call ours.",
-
-    "The best things are worth counting down to.",
-
-    "One less sleep until our forever begins.",
-
-    "Today feels a little more like wedding season.",
-
-    "Saving all my favourite moments for you.",
-
-    "Our story is getting closer to its next chapter.",
-
-    "A thousand little moments are leading us here.",
-
-    "One day closer to standing beside you.",
-
-    "The countdown is just another way of saying I love you.",
-
-    "Soon, this date won't just be on a screen.",
-
-    "Our forever is slowly becoming a date on the calendar.",
-
-    "One day closer to the beginning of something beautiful.",
-
-    "The days are passing, but this feeling isn't.",
-
-    "Counting days, collecting dreams.",
-
-    "Soon we'll look back at this countdown and smile.",
-
-    "There is a whole forever waiting for us.",
-
-    "The closer it gets, the more real it feels.",
-
-    "Today, tomorrow, and every day after — you.",
-
-    "A little patience for a lifetime of memories.",
-
-    "Our day is quietly making its way toward us.",
-
-    "I can't wait for the day we stop counting.",
-
-    "One more page in the calendar turned.",
-
-    "The date is getting closer. So are we.",
-
-    "Forever sounds better when it starts with you.",
-
-    "Our little countdown is becoming our big day.",
-
-    "Soon the waiting becomes the remembering.",
-
-    "Every passing day carries us closer.",
-
-    "I hope you know how excited I am for us.",
-
-    "A future with you is worth every second.",
-
-    "The days may be numbers, but the feeling is everything.",
-
-    "Our wedding day is waiting quietly in the distance.",
-
-    "One day closer to all the little things we've imagined.",
-
-    "There is magic in knowing what we're waiting for.",
-
-    "Soon enough, we'll be living the day we've dreamed about.",
-
-    "Another day gone. Another day closer.",
-
-    "If I could skip to one day, it would be this one.",
-
-    "The countdown keeps moving, and so does our story.",
-
-    "A date, a promise, a lifetime.",
-
-    "Soon we'll trade the countdown for memories.",
-
-    "I can't wait to see what forever looks like with you.",
-
-    "The little details will matter because they're ours.",
-
-    "One more day closer to saying yes to forever.",
-
-    "Our day is coming.",
-
-    "Some days are ordinary. This countdown is not.",
-
-    "We're getting there, one beautiful day at a time.",
-
-    "A little closer to the beginning of forever.",
-
-    "The calendar knows what we're waiting for.",
-
-    "One day we'll wish we could come back to this waiting.",
-
-    "Today is part of the story too.",
-
-    "Every second is bringing us somewhere special.",
-
-    "The wait is becoming part of the memory.",
-
-    "Our forever is getting closer.",
-
-    "Soon this will all be real.",
-
-    "I would wait all over again for you.",
-
-    "Another sunrise closer to our day.",
-
-    "Another sunset closer to forever.",
-
-    "The closer we get, the sweeter the waiting feels.",
-
-    "There are so many memories still waiting to happen.",
-
-    "Our next chapter is almost here.",
-
-    "The days are fewer. The excitement is bigger.",
-
-    "A little reminder: we're really doing this.",
-
-    "Soon we'll be celebrating the love that brought us here.",
-
-    "Our day is on its way.",
-
-    "I can't wait for the ordinary days after the extraordinary one.",
-
-    "One day closer to waking up as newlyweds.",
-
-    "Forever is starting to feel very close.",
-
-    "This countdown has our names written all over it.",
-
-    "The waiting has its own kind of sweetness.",
-
-    "Soon we'll have a wedding day story to tell.",
-
-    "Every day closer feels a little more exciting.",
-
-    "The best part is knowing who I'm waiting for.",
-
-    "Our day will come. And it will be ours.",
-
-    "Almost there, love.",
-
-    "Soon the flowers, music, laughter and us.",
-
-    "A little closer to the moment everything becomes real.",
-
-    "We're almost at the part where the countdown stops.",
-
-    "One more day closer to forever.",
-
-    "The end of the countdown is the beginning of everything.",
-
-    "Soon we'll be standing in the middle of our own story.",
-
-    "Almost time.",
-
-    "The day we've been waiting for is nearly here.",
-
-    "Tomorrow is getting closer.",
-
-    "Our forever is almost ready to begin.",
-
-    "One more sunrise.",
-
-    "One more sleep.",
-
-    "Almost our day.",
-
-    "This is it. We're nearly there.",
-
-    "Tomorrow.",
-
-    "Today is the last day of waiting.",
-
-    "May 02, 2027 — our day.",
-
-    "And suddenly, forever begins."
-
-];
-
-
-/* =====================================================
-   COUNTDOWN ENGINE
-   ===================================================== */
-
-function updateCountdown() {
-
-    const now = new Date();
-    const difference = weddingDate.getTime() - now.getTime();
-
-    if (difference <= 0) {
-
-        document.getElementById("days").textContent = "000";
-        document.getElementById("hours").textContent = "00";
-        document.getElementById("minutes").textContent = "00";
-        document.getElementById("seconds").textContent = "00";
-
-        document.getElementById("progress").style.width = "100%";
-
-        document.getElementById("progressText").textContent =
-            "today is the day";
-
-        document.getElementById("dailyNote").textContent =
-            "And suddenly, forever begins.";
-
-        return;
-    }
-
-    const totalSeconds = Math.floor(difference / 1000);
-
-    const days = Math.floor(totalSeconds / 86400);
-
-    const hours = Math.floor(
-        (totalSeconds % 86400) / 3600
-    );
-
-    const minutes = Math.floor(
-        (totalSeconds % 3600) / 60
-    );
-
-    const seconds = totalSeconds % 60;
-
-    document.getElementById("days").textContent =
-        String(days).padStart(3, "0");
-
-    document.getElementById("hours").textContent =
-        String(hours).padStart(2, "0");
-
-    document.getElementById("minutes").textContent =
-        String(minutes).padStart(2, "0");
-
-    document.getElementById("seconds").textContent =
-        String(seconds).padStart(2, "0");
-
-
-    /* Progress */
-
-    const startDate = new Date(2026, 8, 23, 0, 0, 0);
-
-    const totalDuration =
-        weddingDate.getTime() - startDate.getTime();
-
-    const elapsed =
-        now.getTime() - startDate.getTime();
-
-    let percentage =
-        (elapsed / totalDuration) * 100;
-
-    percentage = Math.max(0, Math.min(100, percentage));
-
-    document.getElementById("progress").style.width =
-        percentage + "%";
-
-
-    document.getElementById("progressText").textContent =
-        Math.round(percentage) + "% of the way there";
-}
-
-
-/* =====================================================
-   DAILY NOTE ENGINE
-
-   The note changes according to the actual calendar day.
-   It does NOT change every second and it does NOT repeat
-   every 14 days.
-   ===================================================== */
-
-function updateDailyNote() {
-
-    const now = new Date();
-
-    const today = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate()
-    );
-
-    const weddingDay = new Date(
-        weddingDate.getFullYear(),
-        weddingDate.getMonth(),
-        weddingDate.getDate()
-    );
-
-    const millisecondsPerDay = 86400000;
-
-    const daysRemaining = Math.ceil(
-        (weddingDay - today) / millisecondsPerDay
-    );
-
+  <script>
     /*
-       Find a note based on days remaining.
-
-       When there are more days than notes, the notes
-       are distributed across the countdown rather than
-       repeating on a two-week cycle.
+      =====================================================
+      WEDDING COUNTDOWN
+      May 02, 2027
+      Safari / iPhone-safe date construction
+      =====================================================
     */
 
-    let index;
+    const weddingDate = new Date(2027, 4, 2, 0, 0, 0);
 
-    if (daysRemaining >= 0) {
+    const daysEl = document.getElementById("days");
+    const hoursEl = document.getElementById("hours");
+    const minutesEl = document.getElementById("minutes");
+    const secondsEl = document.getElementById("seconds");
 
-        if (daysRemaining < notes.length) {
-            index = notes.length - 1 - daysRemaining;
-        } else {
-
-            /*
-               For the earlier part of the countdown,
-               select a note deterministically based on
-               the calendar date.
-            */
-
-            const dateNumber =
-                Math.floor(today.getTime() / millisecondsPerDay);
-
-            index =
-                Math.abs(dateNumber) % notes.length;
-        }
-
-    } else {
-        index = notes.length - 1;
+    function pad(number, length = 2) {
+      return String(number).padStart(length, "0");
     }
 
-    index = Math.max(
-        0,
-        Math.min(notes.length - 1, index)
-    );
+    function updateCountdown() {
+      const now = new Date();
+      let difference = weddingDate.getTime() - now.getTime();
 
-    const noteElement =
-        document.getElementById("dailyNote");
+      if (difference <= 0) {
+        daysEl.textContent = "000";
+        hoursEl.textContent = "00";
+        minutesEl.textContent = "00";
+        secondsEl.textContent = "00";
+        return;
+      }
 
-    noteElement.style.opacity = "0";
+      const totalSeconds = Math.floor(difference / 1000);
 
-    setTimeout(() => {
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
 
-        noteElement.textContent = notes[index];
-
-        noteElement.style.opacity = "1";
-
-    }, 180);
-}
-
-
-/* =====================================================
-   LITTLE HEART SURPRISE
-   ===================================================== */
-
-document.getElementById("heart").addEventListener(
-    "click",
-    function(event) {
-
-        for (let i = 0; i < 7; i++) {
-
-            const sparkle =
-                document.createElement("div");
-
-            sparkle.className = "sparkle";
-
-            sparkle.textContent =
-                i % 2 === 0 ? "♡" : "✦";
-
-            sparkle.style.left =
-                (event.clientX + (Math.random() * 80 - 40)) + "px";
-
-            sparkle.style.top =
-                (event.clientY + (Math.random() * 40 - 20)) + "px";
-
-            document.body.appendChild(sparkle);
-
-            setTimeout(() => {
-                sparkle.remove();
-            }, 1500);
-        }
+      daysEl.textContent = pad(days, 3);
+      hoursEl.textContent = pad(hours);
+      minutesEl.textContent = pad(minutes);
+      secondsEl.textContent = pad(seconds);
     }
-);
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
 
 
-/* =====================================================
-   START
-   ===================================================== */
+    /*
+      =====================================================
+      DAILY NOTE
+      The message automatically changes each calendar day.
+      It is deterministic, so everyone sees the same note
+      for that day.
+      =====================================================
+    */
 
-updateCountdown();
-updateDailyNote();
+    const notes = [
+      "One day closer to forever.",
+      "Somewhere between now and May 2nd, magic is waiting.",
+      "The best part of the story is still ahead.",
+      "Today is one tiny step closer to our day.",
+      "A little less waiting. A little more excitement.",
+      "Counting moments, not just days.",
+      "Our forever is getting closer.",
+      "Another sunrise closer to May.",
+      "The countdown feels a little sweeter today.",
+      "One date. Two people. One beautiful beginning.",
+      "There is something lovely about having a day to look forward to.",
+      "Slowly, quietly, we're getting there.",
+      "May 2nd is making its way toward us.",
+      "A future worth counting down to.",
+      "Every day brings us a little closer.",
+      "Today belongs to the waiting.",
+      "The story keeps getting closer to its next chapter.",
+      "Just a few more ordinary days before an extraordinary one.",
+      "Keep this day. We're getting closer.",
+      "Our favorite date is on its way.",
+      "The little things are becoming part of the big picture.",
+      "Another day in the countdown.",
+      "Something beautiful is getting closer.",
+      "The wait is part of the story too.",
+      "Here's to all the days between now and then.",
+      "Our day is slowly becoming real.",
+      "A little closer than yesterday.",
+      "There is a whole lifetime waiting after this countdown.",
+      "Today, we're one day closer.",
+      "The calendar knows something special is coming.",
+      "May is waiting for us.",
+      "A beautiful beginning is getting closer.",
+      "The countdown continues.",
+      "Some days are meant to be remembered.",
+      "This one is worth counting.",
+      "Another little square crossed off the calendar.",
+      "The closer it gets, the more real it feels.",
+      "Our forever has a date.",
+      "One day at a time.",
+      "The sweetest kind of waiting.",
+      "Soon enough, today will be a memory.",
+      "Keep counting.",
+      "We're getting closer to the moment.",
+      "The days are passing. The excitement is growing.",
+      "A little reminder: something wonderful is coming.",
+      "The next chapter has a date.",
+      "May 2nd, we're coming for you.",
+      "Almost there, one day at a time.",
+      "Today is part of the journey.",
+      "The countdown is our tiny piece of anticipation.",
+      "There is beauty in having something to look forward to.",
+      "Another day closer to celebrating us.",
+      "The wait won't last forever.",
+      "Our date is getting closer.",
+      "A day closer to the beginning of forever.",
+      "The calendar keeps moving in our favor.",
+      "Just imagine how this will feel when the countdown reaches zero.",
+      "Today, tomorrow, and then our day.",
+      "The little number gets smaller. The excitement gets bigger.",
+      "Our story is heading somewhere beautiful.",
+      "One more day tucked into the countdown.",
+      "We're getting there.",
+      "The wait is temporary. The memories will last.",
+      "May is slowly approaching.",
+      "Another day. Another reason to smile.",
+      "The countdown has a destination.",
+      "Something beautiful is on the horizon.",
+      "Our favorite day is getting closer.",
+      "A few more pages before this chapter turns.",
+      "Today is one of the days we'll look back on.",
+      "The clock keeps moving.",
+      "Soon, this countdown will be a memory too.",
+      "One tiny number at a time.",
+      "Closer to the flowers, the music, the laughter.",
+      "Closer to our day.",
+      "Every day makes May 2nd feel a little nearer.",
+      "The wait has its own kind of magic.",
+      "Today counts.",
+      "Another little step toward forever.",
+      "The date is getting closer, quietly and surely.",
+      "Our next big memory is on the calendar.",
+      "Soon we'll stop counting and start celebrating.",
+      "The countdown keeps our secret for a little longer.",
+      "Another day closer to the beginning.",
+      "There is something waiting at the end of this number.",
+      "Keep the date close.",
+      "We're almost at another milestone.",
+      "One more day in our story.",
+      "The best days sometimes begin with a countdown.",
+      "May 2nd is getting closer.",
+      "Today, tomorrow, and every day after.",
+      "The number changes. The destination doesn't.",
+      "A little closer to the day we've been waiting for.",
+      "This countdown is made of tiny moments.",
+      "And then one day, the waiting ends.",
+      "Our day is coming."
+    ];
 
-setInterval(updateCountdown, 1000);
+    function getDailyNote() {
+      const today = new Date();
 
-/*
-   Check the date every minute so the daily message
-   changes automatically after midnight.
-*/
-setInterval(updateDailyNote, 60000);
+      /*
+        Use UTC midnight so the message changes once per
+        calendar day instead of randomly throughout the day.
+      */
 
-</script>
+      const start = Date.UTC(2026, 0, 1);
+      const current = Date.UTC(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
+
+      const dayNumber = Math.floor((current - start) / 86400000);
+
+      return notes[((dayNumber % notes.length) + notes.length) % notes.length];
+    }
+
+    document.getElementById("dailyNote").textContent = getDailyNote();
+
+
+    /*
+      =====================================================
+      LITTLE HEART SURPRISE
+      =====================================================
+    */
+
+    const heart = document.getElementById("heart");
+    const heartMessage = document.getElementById("heartMessage");
+
+    heart.addEventListener("click", () => {
+      heartMessage.classList.add("show");
+
+      setTimeout(() => {
+        heartMessage.classList.remove("show");
+      }, 2200);
+    });
+  </script>
 
 </body>
 </html>
